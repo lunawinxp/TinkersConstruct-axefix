@@ -30,6 +30,7 @@ import tconstruct.library.TConstructRegistry;
 import tconstruct.library.tools.AOEHarvestTool;
 import tconstruct.library.tools.AbilityHelper;
 import tconstruct.tools.TinkerTools;
+import tconstruct.util.config.PHConstruct;
 
 public class LumberAxe extends AOEHarvestTool {
 
@@ -120,6 +121,7 @@ public class LumberAxe extends AOEHarvestTool {
         Stack<ChunkPosition> candidates = new Stack<>();
         Set<ChunkPosition> wood = new HashSet<>();
         Set<ChunkPosition> nonWood = new HashSet<>();
+        boolean isLargeTree = false;
 
         candidates.add(new ChunkPosition(pX, pY, pZ));
 
@@ -134,6 +136,15 @@ public class LumberAxe extends AOEHarvestTool {
 
             Block block = world.getBlock(curX, curY, curZ);
             if (block.isWood(world, curX, curY, curZ)) {
+                // check if the target tree is listed in the large trees list, if so, we process the leaf check
+                // differently.
+                for (String largeTreeName : PHConstruct.lumberaxeLargeTreeTypes) {
+                    if (block.getUnlocalizedName().equals(largeTreeName)) {
+                        isLargeTree = true;
+                        break;
+                    }
+                }
+
                 for (int offX = 0; offX < 3; offX++) {
                     for (int offY = 0; offY < 2; offY++) {
                         for (int offZ = 0; offZ < 3; offZ++) {
@@ -163,8 +174,9 @@ public class LumberAxe extends AOEHarvestTool {
 
         // check if there were enough leaves around the last position
         // pos now contains the block above the topmost log
-        // we want at least 5 leaves in the surrounding 26 blocks
+        // we want at least 5 leaves in the surrounding 26 blocks (, if not a large tree)
         int d = 3;
+        if (isLargeTree) d = 6;
         int leaves = 0;
         for (int offX = 0; offX < d; offX++) {
             for (int offY = 0; offY < d; offY++) {

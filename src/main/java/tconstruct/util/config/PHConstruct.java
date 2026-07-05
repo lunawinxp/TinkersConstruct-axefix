@@ -357,6 +357,12 @@ public class PHConstruct {
                 new String[] { "entitynpc", "entitycustomnpc" },
                 "Entity classes listed here will not drop yellow hearts. The values are the actual class names in lowercase.")
                 .getStringList();
+        lumberaxeLargeTreeTypes = config.get(
+                "Experimental",
+                "LumberaxeLargeTreeTypes",
+                new String[] { "tile.natura.redwood" },
+                "List of wood types, that when detected in use by the Lumberaxe, will use a larger check for the tree detection function, fixing an issue with larger trees (ex: Redwood Trees) being cut in a 3x3 pattern, instead of felling the whole tree.")
+                .getStringList();
 
         craftingStationBlacklist = Sets.newHashSet(
                 config.get(
@@ -590,6 +596,7 @@ public class PHConstruct {
     public static boolean extraBlockUpdates;
     public static String[] heartDropBlacklist;
     public static Set<String> craftingStationBlacklist;
+    public static String[] lumberaxeLargeTreeTypes;
 
     // Crossmod interactions
     public static String metalCastFluidTypeName;
